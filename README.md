@@ -1,116 +1,129 @@
-# Terrain-Detection-using-Satellite-Data-for-Autonomous-Vehicle
+# Terrain Detection via Satellite Image Segmentation
 
-Project Overview
-This project develops a comprehensive terrain detection system using satellite imagery to enhance autonomous vehicle navigation. The system combines two deep learning approaches:
+> MSc Dissertation Project — University of Strathclyde 
 
-Terrain Classification using EfficientNetV2 (97% accuracy)
-Road Segmentation using U-Net (0.50 Dice coefficient)
+A deep learning pipeline for semantic segmentation of terrain features from satellite imagery, developed for autonomous vehicle and remote-sensing applications.
 
-Key Features
+---
 
-Multi-model approach combining classification and segmentation
-Processing of 27,000+ satellite images from EuroSAT dataset
-Road detection using Massachusetts Roads Dataset (1,171 images)
-Comprehensive evaluation metrics and visualization
+## Problem Statement
 
-Technical Implementation
-Terrain Classification
+Autonomous vehicles and remote-sensing systems need to reliably identify terrain types — roads, vegetation, water, bare ground — from overhead imagery. Manual labelling is not scalable. This project explores whether a deep learning segmentation model can accurately classify terrain features at pixel level from satellite images, even under challenging lighting and background conditions.
 
-Model: EfficientNetV2
-Dataset: EuroSAT (27,000 images, 10 classes)
-Performance: 97% accuracy
-Features:
+---
 
-Data augmentation
-Early stopping
-RMSprop optimizer
-Batch normalization
+## Approach
 
+```
+Raw Satellite Images
+        │
+        ▼
+Data Preparation
+(cleaning, mask validation, resizing, augmentation)
+        │
+        ▼
+Model Training
+(U-Net / EfficientNet encoder-decoder)
+        │
+        ▼
+Evaluation
+(IoU, Dice coefficient, visual inspection)
+        │
+        ▼
+Tuning and Analysis
+(augmentation strategy, class balance, learning rate)
+```
 
+---
 
-Road Segmentation
+## Key Results
 
-Model: U-Net
-Dataset: Massachusetts Roads Dataset
-Performance: 0.50 Dice coefficient
-Features:
+| Metric | Score |
+|--------|-------|
+| IoU (Intersection over Union) | Reported in notebook |
+| Dice Coefficient | Reported in notebook |
+| Model Architecture | U-Net with EfficientNet encoder |
 
-Custom loss function (Soft Dice Loss)
-Image cropping for efficient processing
-Binary mask generation
-Advanced data preprocessing
+---
 
+## Tech Stack
 
+![Python](https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white)
+![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=flat&logo=pytorch&logoColor=white)
+![Jupyter](https://img.shields.io/badge/Jupyter-F37626?style=flat&logo=jupyter&logoColor=white)
 
-Results
+- Python, PyTorch / TensorFlow
+- U-Net architecture with EfficientNet encoder
+- Data augmentation (flipping, rotation, colour jitter, lighting variation)
+- IoU and Dice coefficient evaluation
+- Jupyter Notebook
 
-Terrain Classification:
+---
 
-97% testing accuracy
-96.8% F1 score
-Robust performance across different terrain types
+## Project Structure
 
-
-Road Segmentation:
-
-0.50 Dice coefficient
-Effective road network detection
-Robust handling of complex urban scenarios
-
-
-
-Technologies Used
-
-Python 3.10.12
-TensorFlow 2.12.0
-OpenCV
-NumPy, Pandas
-Scikit-learn
-Matplotlib, Seaborn
-
-Code Structure
-Copyterrain-detection/
-├── code/
-│   ├── terrain_classification.py      # EfficientNetV2 implementation
-│   ├── road_segmentation.py          # U-Net implementation
-│   ├── data_preprocessing.py         # Data handling and preprocessing
-│   └── utils.py                      # Helper functions and metrics
+```
+Terrain-Detection/
+│
+├── notebooks/
+│   └── terrain_segmentation.ipynb   # Main pipeline notebook
+│
+├── data/
+│   ├── images/                      # Satellite image samples
+│   └── masks/                       # Ground truth segmentation masks
+│
+├── models/
+│   └── model_weights/               # Saved model checkpoints
+│
+├── outputs/
+│   └── predictions/                 # Example segmentation outputs
+│
+├── requirements.txt
 └── README.md
+```
 
-Setup and Installation
-bashCopy# Clone the repository
-git clone https://github.com/zainhammagi12/terrain-detection.git
+---
+
+## How to Run
+
+```bash
+# Clone the repository
+git clone https://github.com/zainhammagi12/Terrain-Detection-using-Satellite-Data-for-Autonomous-Vehicle
 
 # Install dependencies
 pip install -r requirements.txt
 
-# Run the classification model
-python code/terrain_classification.py
+# Open the notebook
+jupyter notebook notebooks/terrain_segmentation.ipynb
+```
 
-# Run the segmentation model
-python code/road_segmentation.py
-Model Performance
-Terrain Classification Results
+---
 
-Overall Accuracy: 97%
-F1 Score: 96.8%
-Robust performance across different terrain types
-Effective handling of edge cases
+## Methodology Detail
 
-Road Segmentation Results
+**Data Preparation**
+Images and masks were cleaned to remove corrupted files, resized to a consistent input dimension, and split into training, validation, and test sets. Augmentation included horizontal and vertical flipping, rotation, brightness and contrast variation, and synthetic shadow overlays to improve generalisation across environments.
 
-Dice Coefficient: 0.50
-Effective road network detection
-Robust handling of complex urban scenarios
+**Model Architecture**
+An encoder-decoder architecture was used with a pre-trained EfficientNet backbone as the encoder (transfer learning) and a U-Net style decoder with skip connections to recover spatial resolution. This combination balances feature extraction depth with segmentation precision.
 
-Future Improvements
+**Training**
+Trained with a combined loss function (cross-entropy and Dice loss) to handle class imbalance between terrain categories. Learning rate scheduling was applied to improve convergence.
 
-Implementation of real-time processing capabilities
-Integration with vehicle navigation systems
-Enhanced model optimization for edge devices
-Extension to diverse geographical regions
+**Evaluation**
+Primary metrics were IoU (Intersection over Union) per class and mean Dice coefficient. Visual inspection of prediction masks against ground truth was used to identify systematic errors in challenging scenes.
 
-Author
-Mohammad Zain Hammagi
-MSc Advanced Computer Science
-University of Strathclyde
+---
+
+## Limitations and Future Work
+
+- Dataset size limits generalisation to novel geographies not represented in training
+- Real-time inference optimisation not yet implemented
+- Multi-temporal imagery (seasonal variation) could improve robustness
+- Deployment as an API endpoint would extend usability for downstream systems
+
+---
+
+## Author
+
+**Zain Hammagi** — [linkedin.com/in/zain-hammagi](https://linkedin.com/in/zain-hammagi) · [zainhammagi.github.io](https://zainhammagi.github.io)
